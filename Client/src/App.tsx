@@ -3,12 +3,13 @@ import './App.css'
 import Footer from './modules/Footer'
 import Header from './modules/Header'
 import Main from './modules/Main'
-function App() {
-  
-
+import NavBar from "./modules/Navbar.tsx";
+function App() : JSX.Element {
   return (
-    <>
-    <Header />
+      <>
+    <Header>
+      <NavBar/>
+    </Header>
     <Main />
     <Footer />
     </>
