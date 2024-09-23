@@ -527,5 +527,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Property
+     * @name PropertyDeleteDelete
+     * @request DELETE:/api/Property/Delete/{id}
+     */
+    propertyDeleteDelete: (id: number, params: RequestParams = {}) =>
+      this.request<Property, any>({
+        path: `/api/Property/Delete/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
   };
 }

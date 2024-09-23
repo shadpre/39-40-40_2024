@@ -21,6 +21,14 @@ namespace Api.Controllers
             throw new NotImplementedException();
             //return repo.CreateProperty(property);
         }
-      
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public ActionResult<Property> DeleteProperty([FromRoute] int id)
+        {
+            throw new NotImplementedException();
+            //return repo.DeleteProperty(id);
+        }
+
     }
 }
