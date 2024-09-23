@@ -1,19 +1,22 @@
-
-import './App.css'
-import Footer from './modules/Footer'
-import Header from './modules/Header'
-import Main from './modules/Main'
+import "./App.css";
+import Footer from "./modules/Footer";
+import Header from "./modules/Header";
+import Main from "./modules/Main";
 import NavBar from "./modules/Navbar.tsx";
-function App() : JSX.Element {
+import CustomerList from "./modules/CustomerList";
+
+function App(): JSX.Element {
   return (
-      <>
-    <Header>
-      <NavBar/>
-    </Header>
-    <Main />
-    <Footer />
+    <>
+      <Header>
+        <NavBar />
+      </Header>
+      <Main>
+        <CustomerList />
+      </Main>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

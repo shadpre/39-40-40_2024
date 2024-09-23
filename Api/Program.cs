@@ -1,4 +1,6 @@
 
+using BusinessLogic;
+
 namespace Api
 {
     public class Program
@@ -7,12 +9,16 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            
             // Add services to the container.
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Dependency Injection
+            builder.Services.AddSingleton<IDBRepo,DBRepo>();
 
             var app = builder.Build();
 
@@ -25,6 +31,8 @@ namespace Api
 
 
             app.MapControllers();
+
+            app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.Run();
         }
