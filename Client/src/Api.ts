@@ -98,22 +98,16 @@ export interface FullRequestParams extends Omit<RequestInit, "body"> {
   cancelToken?: CancelToken;
 }
 
-export type RequestParams = Omit<
-  FullRequestParams,
-  "body" | "method" | "query" | "path"
->;
+export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
 export interface ApiConfig<SecurityDataType = unknown> {
   baseUrl?: string;
   baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
-  securityWorker?: (
-    securityData: SecurityDataType | null
-  ) => Promise<RequestParams | void> | RequestParams | void;
+  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
   customFetch?: typeof fetch;
 }
 
-export interface HttpResponse<D extends unknown, E extends unknown = unknown>
-  extends Response {
+export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
   data: D;
   error: E;
 }
@@ -132,8 +126,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) =>
-    fetch(...fetchParams);
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
   private baseApiParams: RequestParams = {
     credentials: "same-origin",
@@ -152,9 +145,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(
-      typeof value === "number" ? value : `${value}`
-    )}`;
+    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
   }
 
   protected addQueryParam(query: QueryParamsType, key: string) {
@@ -168,15 +159,9 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected toQueryString(rawQuery?: QueryParamsType): string {
     const query = rawQuery || {};
-    const keys = Object.keys(query).filter(
-      (key) => "undefined" !== typeof query[key]
-    );
+    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
     return keys
-      .map((key) =>
-        Array.isArray(query[key])
-          ? this.addArrayQueryParam(query, key)
-          : this.addQueryParam(query, key)
-      )
+      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
       .join("&");
   }
 
@@ -187,13 +172,8 @@ export class HttpClient<SecurityDataType = unknown> {
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
-      input !== null && (typeof input === "object" || typeof input === "string")
-        ? JSON.stringify(input)
-        : input,
-    [ContentType.Text]: (input: any) =>
-      input !== null && typeof input !== "string"
-        ? JSON.stringify(input)
-        : input,
+      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+    [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
     [ContentType.FormData]: (input: any) =>
       Object.keys(input || {}).reduce((formData, key) => {
         const property = input[key];
@@ -202,18 +182,15 @@ export class HttpClient<SecurityDataType = unknown> {
           property instanceof Blob
             ? property
             : typeof property === "object" && property !== null
-            ? JSON.stringify(property)
-            : `${property}`
+              ? JSON.stringify(property)
+              : `${property}`,
         );
         return formData;
       }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
-  protected mergeRequestParams(
-    params1: RequestParams,
-    params2?: RequestParams
-  ): RequestParams {
+  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
     return {
       ...this.baseApiParams,
       ...params1,
@@ -226,9 +203,7 @@ export class HttpClient<SecurityDataType = unknown> {
     };
   }
 
-  protected createAbortSignal = (
-    cancelToken: CancelToken
-  ): AbortSignal | undefined => {
+  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
     if (this.abortControllers.has(cancelToken)) {
       const abortController = this.abortControllers.get(cancelToken);
       if (abortController) {
@@ -272,28 +247,15 @@ export class HttpClient<SecurityDataType = unknown> {
     const payloadFormatter = this.contentFormatters[type || ContentType.Json];
     const responseFormat = format || requestParams.format;
 
-    return this.customFetch(
-      `${baseUrl || this.baseUrl || ""}${path}${
-        queryString ? `?${queryString}` : ""
-      }`,
-      {
-        ...requestParams,
-        headers: {
-          ...(requestParams.headers || {}),
-          ...(type && type !== ContentType.FormData
-            ? { "Content-Type": type }
-            : {}),
-        },
-        signal:
-          (cancelToken
-            ? this.createAbortSignal(cancelToken)
-            : requestParams.signal) || null,
-        body:
-          typeof body === "undefined" || body === null
-            ? null
-            : payloadFormatter(body),
-      }
-    ).then(async (response) => {
+    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
+      ...requestParams,
+      headers: {
+        ...(requestParams.headers || {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+      },
+      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
+      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
       const r = response.clone() as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
@@ -328,9 +290,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * @title Api
  * @version 1.0
  */
-export class Api<
-  SecurityDataType extends unknown
-> extends HttpClient<SecurityDataType> {
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
     /**
      * No description
@@ -354,10 +314,7 @@ export class Api<
      * @name CustomerCreateNewCustomerCreate
      * @request POST:/api/Customer/CreateNewCustomer
      */
-    customerCreateNewCustomerCreate: (
-      data: Customer,
-      params: RequestParams = {}
-    ) =>
+    customerCreateNewCustomerCreate: (data: Customer, params: RequestParams = {}) =>
       this.request<Customer, any>({
         path: `/api/Customer/CreateNewCustomer`,
         method: "POST",
@@ -395,7 +352,7 @@ export class Api<
         customerEmail?: string;
         OrderEntries?: OrderEntry[];
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Order, any>({
         path: `/api/Order/CreateOrder`,
@@ -464,7 +421,7 @@ export class Api<
         customerEmail?: string;
         OrderEntries?: OrderEntry[];
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Order, any>({
         path: `/api/Order/UpdateOrder/${orderId}`,
@@ -496,25 +453,12 @@ export class Api<
      * @name PaperCreatePaperCreate
      * @request POST:/api/Paper/CreatePaper
      */
-    paperCreatePaperCreate: (
-      query?: {
-        /** @format int32 */
-        Id?: number;
-        Name?: string;
-        Discontinued?: boolean;
-        /** @format int32 */
-        Stock?: number;
-        /** @format double */
-        Price?: number;
-        PaperProperties?: PaperProperty[];
-        OrderEntries?: OrderEntry[];
-      },
-      params: RequestParams = {}
-    ) =>
+    paperCreatePaperCreate: (data: Paper, params: RequestParams = {}) =>
       this.request<Paper, any>({
         path: `/api/Paper/CreatePaper`,
         method: "POST",
-        query: query,
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -539,7 +483,7 @@ export class Api<
         PaperProperties?: PaperProperty[];
         OrderEntries?: OrderEntry[];
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Paper, any>({
         path: `/api/Paper/UpdatePaper`,
@@ -553,12 +497,12 @@ export class Api<
      * No description
      *
      * @tags Property
-     * @name PropertyGetPropertiesList
-     * @request GET:/api/Property/GetProperties
+     * @name PropertyGetAllPropertiesList
+     * @request GET:/api/Property/GetAllProperties
      */
-    propertyGetPropertiesList: (params: RequestParams = {}) =>
+    propertyGetAllPropertiesList: (params: RequestParams = {}) =>
       this.request<Property[], any>({
-        path: `/api/Property/GetProperties`,
+        path: `/api/Property/GetAllProperties`,
         method: "GET",
         format: "json",
         ...params,
@@ -578,7 +522,7 @@ export class Api<
         PropertyName?: string;
         PaperProperties?: PaperProperty[];
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Property, any>({
         path: `/api/Property/CreateProperty`,

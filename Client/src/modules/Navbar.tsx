@@ -5,7 +5,9 @@ export default function NavBar(): JSX.Element {
       <div className="container mx-auto px-4">
         <div className="navbar">
           <div className="navbar-start">
-            <a className="btn btn-ghost normal-case text-xl">MyApp</a>
+            <Link to="/" className="btn btn-ghost normal-case text-xl">
+              MyApp
+            </Link>
           </div>
           <div className="navbar-center hidden lg:flex">
             <ul className="list-none flex space-x-4">
@@ -54,7 +56,7 @@ function Links() {
         <Link to="/create-customer">Opret Kunde</Link>
       </li>
       <li>
-        <a>About</a>
+        <Link to="/create-product">Opret Produkt</Link>
       </li>
       <li>
         <a>Services</a>

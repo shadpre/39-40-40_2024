@@ -14,3 +14,7 @@
 - As a business admin I want to see order history for all customers.
 - As a business admin I want to be able to create custom properties for paper products (water-resistant, study, etc).
 - As a business admin I want to be able to change the status of an order.
+
+
+
+swagger-typescript-api -p http://localhost:5135/swagger/v1/swagger.json -o ./src

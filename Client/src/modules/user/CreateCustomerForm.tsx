@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { Api } from "../../Api";
 import { useAtom } from "jotai";
 import { CurrentCustomerAtom } from "../../atoms";
 import { useNavigate } from "react-router-dom";
-
-const api = new Api({
-  baseUrl: "http://localhost:5135",
-});
+import { api } from "../../MyAPI";
 
 export default function CreateCustomerForm(): JSX.Element {
   const [name, setName] = useState("");
@@ -22,7 +18,7 @@ export default function CreateCustomerForm(): JSX.Element {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validateEmail(email)) {
       setEmailError("Invalid email format");
@@ -31,7 +27,7 @@ export default function CreateCustomerForm(): JSX.Element {
     setEmailError("");
     PostCustomer();
     navigate("/");
-  };
+  }
 
   async function PostCustomer() {
     try {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
+    #region Customer
     public class DBFacade
     {
         public List<Customer> GetCustomers()
@@ -53,6 +54,26 @@ namespace DataAccessLayer
                 context.Customers.Remove(customer);
                 context.SaveChanges();
             }
+        }
+        #endregion
+
+        #region Properties
+        public Property CreateProperty(Property p)
+        {
+            using (var context = new MyDbContext())
+            {
+                context.Add(p);
+                context.SaveChanges();
+                return p;
+            }
+        }
+        public List<Property> GetAllProperties()
+        {
+            using (var context = new MyDbContext())
+            {
+                return context.Properties.ToList();
+            }
+            #endregion
         }
     }
 }

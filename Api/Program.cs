@@ -1,5 +1,6 @@
 
 using BusinessLogic;
+using DataAccessLayer;
 
 namespace Api
 {
@@ -18,7 +19,10 @@ namespace Api
             builder.Services.AddSwaggerGen();
 
             // Dependency Injection
-            builder.Services.AddSingleton<IDBRepo,DBRepo>();
+            
+            builder.Services
+                .AddSingleton<DBFacade>()
+                .AddSingleton<IDBRepo,DBRepo>();
 
             var app = builder.Build();
 

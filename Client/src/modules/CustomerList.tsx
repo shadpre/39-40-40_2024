@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import { Customer, Api } from "../Api";
-
-const api = new Api({
-  baseUrl: "http://localhost:5135",
-});
+import { Customer } from "../Api";
+import { api } from "../MyAPI";
 
 export default function CustomerList(): JSX.Element {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -11,11 +8,10 @@ export default function CustomerList(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchCustomers()  {
-
+    async function fetchCustomers() {
       try {
         const response = await api.api.customerGetCustomersList();
-        const data = response.data;        
+        const data = response.data;
         setCustomers(data);
       } catch (err) {
         if (err instanceof Error) {
@@ -26,7 +22,7 @@ export default function CustomerList(): JSX.Element {
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     fetchCustomers();
   }, []);

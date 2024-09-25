@@ -7,11 +7,11 @@ namespace Api.Controllers
     public class PropertyController(IDBRepo repo) : ControllerBase
     {
         [HttpGet]
-        [Route("GetProperties")]
-        public ActionResult<List<Property>> GetProperties()
+        [Route("GetAllProperties")]
+        public ActionResult<List<Property>> GetAllProperties()
         {
-            throw new NotImplementedException();
-            //return repo.GetAllProperties();
+            
+            return repo.GetAllProperties();
         }
 
         [HttpPost]
