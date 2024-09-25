@@ -17,6 +17,16 @@ namespace BusinessLogic
             }
         }
 
+        public Customer CreateCustomer(Customer c)
+        {
+            using (var context = new MyDbContext())
+            {
+                context.Customers.Add(c);
+                context.SaveChanges();
+                return c;
+            }
+        }
+
         public Order CreateOrder(Order order)
         {
             using (var context = new MyDbContext())

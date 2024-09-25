@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { Customer, Api } from "../../Api";
+const api = new Api({
+  baseUrl: "http://localhost:5135",
+});
 
 export default function CreateCustomerForm(): JSX.Element {
   const [name, setName] = useState("");
@@ -19,8 +23,28 @@ export default function CreateCustomerForm(): JSX.Element {
       return;
     }
     setEmailError("");
-    // Handle form submission
+    PostCustomer();
   };
+
+  async function PostCustomer() {
+    try {
+      const response = await api.api.customerCreateNewCustomerCreate({
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+        id: 0, // This is a placeholder value
+      });
+      const data = response.data;
+      console.log(data);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(err.message);
+      } else {
+        console.log("An unknown error occurred");
+      }
+    }
+  }
 
   return (
     <form

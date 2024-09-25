@@ -13,5 +13,12 @@ namespace Api.Controllers
         {
             return repo.GetAllCustomers();
         }
+
+        [HttpPost]
+        [Route("CreateNewCustomer")]
+        public ActionResult<Customer> CreateNewCustomer([FromBody] Customer c)
+        {
+            return repo.CreateCustomer(c);
+        }
     }
 }

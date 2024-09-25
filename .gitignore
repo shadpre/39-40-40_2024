@@ -23,6 +23,14 @@ Api/bin/
 Api/obj/
 Api/.vs/
 Api/.vscode/
+DataAccessLayer/bin/
+DataAccessLayer/obj/
+DataAccessLayer/.vs/
+DataAccessLayer/.vscode/
+BusinessLogic/bin/
+BusinessLogic/obj/
+BusinessLogic/.vs/
+BusinessLogic/.vscode/
 
 # Ignore environment files for the backend
 Api/*.env
