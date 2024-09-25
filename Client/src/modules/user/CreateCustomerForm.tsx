@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Customer, Api } from "../../Api";
+import { Api } from "../../Api";
+import { useAtom } from "jotai";
+import { CurrentCustomerAtom } from "../../atoms";
+import { useNavigate } from "react-router-dom";
+
 const api = new Api({
   baseUrl: "http://localhost:5135",
 });
@@ -10,6 +14,8 @@ export default function CreateCustomerForm(): JSX.Element {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [, setCurrentCustomer] = useAtom(CurrentCustomerAtom);
+  const navigate = useNavigate();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,6 +30,7 @@ export default function CreateCustomerForm(): JSX.Element {
     }
     setEmailError("");
     PostCustomer();
+    navigate("/");
   };
 
   async function PostCustomer() {
@@ -36,6 +43,7 @@ export default function CreateCustomerForm(): JSX.Element {
         id: 0, // This is a placeholder value
       });
       const data = response.data;
+      setCurrentCustomer(data);
       console.log(data);
     } catch (err) {
       if (err instanceof Error) {
@@ -46,14 +54,23 @@ export default function CreateCustomerForm(): JSX.Element {
     }
   }
 
+  function resetForm() {
+    setName("");
+    setAddress("");
+    setPhone("");
+    setEmail("");
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-4 bg-base-100 shadow-md rounded"
+      onReset={resetForm}
+      className="max-w-md mx-auto p-4 bg-base-100 shadow-md rounded mt-5"
     >
       <div className="form-control mb-4">
+        <h1 className="text-2xl font-bold">Opret Kunde</h1>
         <label className="label">
-          <span className="label-text">Name</span>
+          <span className="label-text">Navn</span>
         </label>
         <input
           type="text"
@@ -65,7 +82,7 @@ export default function CreateCustomerForm(): JSX.Element {
       </div>
       <div className="form-control mb-4">
         <label className="label">
-          <span className="label-text">Address</span>
+          <span className="label-text">Addresse</span>
         </label>
         <input
           type="text"
@@ -77,7 +94,7 @@ export default function CreateCustomerForm(): JSX.Element {
       </div>
       <div className="form-control mb-4">
         <label className="label">
-          <span className="label-text">Phone</span>
+          <span className="label-text">Telefon</span>
         </label>
         <input
           type="text"
@@ -102,9 +119,12 @@ export default function CreateCustomerForm(): JSX.Element {
           <p className="text-red-500 text-sm mt-1">{emailError}</p>
         )}
       </div>
-      <div className="form-control">
-        <button type="submit" className="btn btn-primary">
-          Submit
+      <div className="form-control flex space-x-4">
+        <button type="submit" className="btn btn-primary m-2">
+          Opret
+        </button>
+        <button type="reset" className="btn btn-secondary m-2">
+          Reset
         </button>
       </div>
     </form>

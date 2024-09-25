@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function NavBar(): JSX.Element {
   return (
     <header className="bg-base-100 shadow-md">
@@ -50,7 +51,7 @@ function Links() {
   return (
     <>
       <li>
-        <a>Home</a>
+        <Link to="/create-customer">Opret Kunde</Link>
       </li>
       <li>
         <a>About</a>
