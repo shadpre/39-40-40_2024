@@ -10,19 +10,41 @@
  */
 
 export interface Customer {
-  /** @format int32 */
-  id?: number;
-  name?: string | null;
-  address?: string | null;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  id: number;
+  /**
+   * @minLength 3
+   * @maxLength 100
+   * @pattern ^.*\s+.*$
+   */
+  name: string;
+  /**
+   * @format email
+   * @minLength 1
+   */
+  email: string;
+  /**
+   * @minLength 3
+   * @maxLength 100
+   * @pattern ^.*\s+.*$
+   */
+  address: string;
   phone?: string | null;
-  email?: string | null;
 }
 
 export interface Order {
-  /** @format int32 */
-  id?: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  id: number;
   /** @format date-time */
-  orderDate?: string;
+  orderDate?: string | null;
   /** @format date-time */
   deliveryDate?: string | null;
   status?: string | null;
@@ -332,9 +354,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/Order/CreateOrder
      */
     orderCreateOrderCreate: (
-      query?: {
-        /** @format int32 */
-        Id?: number;
+      query: {
+        /**
+         * @format int32
+         * @min 0
+         * @max 2147483647
+         */
+        Id: number;
         /** @format date-time */
         OrderDate?: string;
         /** @format date-time */
@@ -344,12 +370,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         TotalAmount?: number;
         /** @format int32 */
         CustomerId?: number;
-        /** @format int32 */
-        customerId?: number;
-        customerName?: string;
-        customerAddress?: string;
+        /**
+         * @format int32
+         * @min 0
+         * @max 2147483647
+         */
+        customerId: number;
+        /**
+         * @minLength 3
+         * @maxLength 100
+         * @pattern ^.*\s+.*$
+         */
+        customerName: string;
+        /** @format email */
+        customerEmail: string;
+        /**
+         * @minLength 3
+         * @maxLength 100
+         * @pattern ^.*\s+.*$
+         */
+        customerAddress: string;
         customerPhone?: string;
-        customerEmail?: string;
         OrderEntries?: OrderEntry[];
       },
       params: RequestParams = {},
@@ -401,9 +442,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     orderUpdateOrderUpdate: (
       orderId: number,
-      query?: {
-        /** @format int32 */
-        Id?: number;
+      query: {
+        /**
+         * @format int32
+         * @min 0
+         * @max 2147483647
+         */
+        Id: number;
         /** @format date-time */
         OrderDate?: string;
         /** @format date-time */
@@ -413,12 +458,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         TotalAmount?: number;
         /** @format int32 */
         CustomerId?: number;
-        /** @format int32 */
-        customerId?: number;
-        customerName?: string;
-        customerAddress?: string;
+        /**
+         * @format int32
+         * @min 0
+         * @max 2147483647
+         */
+        customerId: number;
+        /**
+         * @minLength 3
+         * @maxLength 100
+         * @pattern ^.*\s+.*$
+         */
+        customerName: string;
+        /** @format email */
+        customerEmail: string;
+        /**
+         * @minLength 3
+         * @maxLength 100
+         * @pattern ^.*\s+.*$
+         */
+        customerAddress: string;
         customerPhone?: string;
-        customerEmail?: string;
         OrderEntries?: OrderEntry[];
       },
       params: RequestParams = {},

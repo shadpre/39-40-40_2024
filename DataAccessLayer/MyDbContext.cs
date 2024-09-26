@@ -12,7 +12,7 @@ public class MyDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=localhost;Database=Paper;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer("Server=localhost;Database=Paper1;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

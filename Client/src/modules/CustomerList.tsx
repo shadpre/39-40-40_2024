@@ -41,7 +41,7 @@ export default function CustomerList(): JSX.Element {
       <ul>
         {customers.map((customer) => (
           <li key={customer.id}>
-            {customer.name} - {customer.email}
+            {customer.name} - {customer.email} -{customer.phone}
           </li>
         ))}
       </ul>

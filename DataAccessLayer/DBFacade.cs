@@ -75,15 +75,19 @@ namespace DataAccessLayer
             }
         }
 
-        public void AddPropertyToProduct(int prID, int paID)
+        public void AddPropertiesToProduct(int paID, List<int> prIDs)
         {
+            if (prIDs.Count == 0) throw new ArgumentException("No properties to add", nameof(prIDs));
+
             using (var context = new MyDbContext())
             {
-                context.PaperProperties.Add(new PaperProperty
+               var paperProps = new List<PaperProperty>();
+                foreach (var prID in prIDs)
                 {
-                    PaperId = paID,
-                    PropertyId = prID
-                });
+                    paperProps.Add(new PaperProperty { PaperId = paID, PropertyId = prID });
+                }
+                context.PaperProperties.AddRange(paperProps);
+                context.SaveChanges();
             }
         }
         #endregion
