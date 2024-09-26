@@ -16,11 +16,13 @@ namespace Api.Controllers
 
         [HttpPost]
         [Route("CreatePaper")]
-        public ActionResult<Paper> CreatePaper(Paper paper)
+        public ActionResult<Paper> CreatePaper([FromBody]Paper paper)
         {
             throw new NotImplementedException();
             //return repo.CreatePaper(paper);
         }
+
+
 
         [HttpPut]
         [Route("UpdatePaper")]

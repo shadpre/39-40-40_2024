@@ -26,23 +26,23 @@ namespace DataAccessLayer
             }
         }
 
-        public Customer CreateCustomer(Customer customer)
+        public Customer CreateCustomer(Customer c)
         {
             using (var context = new MyDbContext())
             {
-                context.Customers.Add(customer);
+                context.Customers.Add(c);
                 context.SaveChanges();
-                return customer;
+                return c;
             }
         }
 
-        public Customer UpdateCustomer(Customer customer)
+        public Customer UpdateCustomer(Customer c)
         {
             using (var context = new MyDbContext())
             {
-                context.Customers.Update(customer);
+                context.Customers.Update(c);
                 context.SaveChanges();
-                return customer;
+                return c;
             }
         }
 
@@ -58,13 +58,13 @@ namespace DataAccessLayer
         #endregion
 
         #region Properties
-        public Property CreateProperty(Property p)
+        public Property CreateProperty(Property pr)
         {
             using (var context = new MyDbContext())
             {
-                context.Add(p);
+                context.Properties.Add(pr);
                 context.SaveChanges();
-                return p;
+                return pr;
             }
         }
         public List<Property> GetAllProperties()
@@ -73,7 +73,19 @@ namespace DataAccessLayer
             {
                 return context.Properties.ToList();
             }
-            #endregion
         }
+
+        public void AddPropertyToProduct(int prID, int paID)
+        {
+            using (var context = new MyDbContext())
+            {
+                context.PaperProperties.Add(new PaperProperty
+                {
+                    PaperId = paID,
+                    PropertyId = prID
+                });
+            }
+        }
+        #endregion
     }
 }

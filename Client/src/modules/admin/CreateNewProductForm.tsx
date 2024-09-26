@@ -89,7 +89,7 @@ export default function CreateNewProductForm(): JSX.Element {
           required
         />
       </div>
-      <div className="form-control flex space-x-4">
+      <div className="form-control flex ">
         <button type="submit" className="btn btn-primary m-2">
           Opret
         </button>

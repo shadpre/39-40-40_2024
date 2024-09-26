@@ -18,7 +18,7 @@ export default function NavBar(): JSX.Element {
             <a className="btn">Login</a>
           </div>
           <div className="navbar-end lg:hidden">
-            <div className="dropdown">
+            <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
