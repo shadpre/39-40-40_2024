@@ -81,3 +81,13 @@ Thumbs.db
 /DataAccessLayer/obj/Debug/net8.0/DataAccessLayer.pdb
 /DataAccessLayer/obj/Debug/net8.0/DataAccessLayer.sourcelink.json
 /DataAccessLayer/obj/Debug/net8.0/refint/DataAccessLayer.dll
+/BusinessLogic/obj/BusinessLogic.csproj.nuget.dgspec.json
+/BusinessLogic/obj/BusinessLogic.csproj.nuget.g.props
+/BusinessLogic/obj/BusinessLogic.csproj.nuget.g.targets
+/BusinessLogic/obj/project.assets.json
+/BusinessLogic/obj/project.nuget.cache
+/DataAccessLayer/obj/DataAccessLayer.csproj.nuget.dgspec.json
+/DataAccessLayer/obj/DataAccessLayer.csproj.nuget.g.props
+/DataAccessLayer/obj/DataAccessLayer.csproj.nuget.g.targets
+/DataAccessLayer/obj/project.assets.json
+/DataAccessLayer/obj/project.nuget.cache
