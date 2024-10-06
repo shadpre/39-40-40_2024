@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../MyAPI";
-import { Paper, Property } from "../../Api";
+import { Paper, Property, PaperProperty } from "../../Api";
 import OK_ResetBtn from "../formElements/OK_ResetBtn";
 
 export default function CreateNewProductForm(): JSX.Element {
@@ -10,14 +10,14 @@ export default function CreateNewProductForm(): JSX.Element {
   const [description, setDescription] = useState("");
   const [PaperProperties, setPaperProperties] = useState<Property[]>([]);
   const [newProduct, setNewProduct] = useState<Paper | null>(null);
-  const AllProperties: Property[] = [];
+  const [AllProperties, setAllProperties] = useState<Property[]>([]);
 
   useEffect(() => {
     async function fetchPaperProperties() {
       try {
         const response = await api.api.propertyGetAllPropertiesList();
         const data = response.data;
-        AllProperties.push(...data);
+        setAllProperties(data);
       } catch (err) {
         if (err instanceof Error) {
           console.log(err.message);
@@ -29,6 +29,16 @@ export default function CreateNewProductForm(): JSX.Element {
 
     fetchPaperProperties();
   }, []);
+
+  function handleCheckboxChange(property: Property) {
+    setPaperProperties((prevProperties) => {
+      if (prevProperties.some((p) => p.id === property.id)) {
+        return prevProperties.filter((p) => p.id !== property.id);
+      } else {
+        return [...prevProperties, property];
+      }
+    });
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +53,19 @@ export default function CreateNewProductForm(): JSX.Element {
     setDescription("");
     setStock(0);
   }
+
   async function PostProduct() {
+    let paperProbs: PaperProperty[] = [];
+
+    if (PaperProperties.length > 0) {
+      PaperProperties.forEach((property) => {
+        paperProbs.push({
+          propertyId: property.id,
+          paperId: 0,
+        });
+      });
+    }
+
     const newProduct: Paper = {
       name: name,
       price: price,
@@ -51,9 +73,11 @@ export default function CreateNewProductForm(): JSX.Element {
       discontinued: false,
       stock: stock,
       description: description,
+      paperProperties: paperProbs,
     };
 
     try {
+        console.log(newProduct);
       const response = await api.api.paperCreatePaperCreate(newProduct);
       const data = response.data;
       setNewProduct(data);
@@ -101,33 +125,51 @@ export default function CreateNewProductForm(): JSX.Element {
           required
         />
       </div>
-        <div className="form-control mb-4">
-            <label className="label" htmlFor="prodStock">
-            <span className="label-text">Antal på Lager</span>
+      <div className="form-control mb-4">
+        <label className="label" htmlFor="prodStock">
+          <span className="label-text">Antal på Lager</span>
+        </label>
+        <input
+          name="prodStock"
+          id="prodStock"
+          type="number"
+          className="input input-bordered"
+          value={stock}
+          onChange={(e) => setStock(parseInt(e.target.value))}
+          required
+        />
+      </div>
+      <div className="form-control mb-4">
+        <label className="label" htmlFor="prodDescription">
+          <span className="label-text">Beskrivelse</span>
+        </label>
+        <textarea
+          name="prodDescription"
+          id="prodDescription"
+          className="textarea textarea-bordered"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-control mb-4">
+        <label className="label">
+          <span className="label-text">Egenskaber</span>
+        </label>
+        <div className="grid grid-cols-1 gap-2">
+          {AllProperties.map((property) => (
+            <label key={property.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={PaperProperties.some((p) => p.id === property.id)}
+                onChange={() => handleCheckboxChange(property)}
+              />
+              <span>{property.propertyName}</span>
             </label>
-            <input
-            name="prodStock"
-            id="prodStock"
-            type="number"
-            className="input input-bordered"
-            value={stock}
-            onChange={(e) => setStock(parseInt(e.target.value))}
-            required
-            />
+          ))}
         </div>
-        <div className="form-control mb-4">
-            <label className="label" htmlFor="prodDescription">
-            <span className="label-text">Beskrivelse</span>
-            </label>
-            <textarea
-            name="prodDescription"
-            id="prodDescription"
-            className="textarea textarea-bordered"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            />
-        </div>
+      </div>
       <OK_ResetBtn />
     </form>
   );

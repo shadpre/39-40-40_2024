@@ -26,7 +26,7 @@ namespace Api.Controllers
         public ActionResult<List<Property>> UpdateProperty([FromRoute] int Id,
             [FromBody] Property p)
         {
-
+            repo.UpdateProperty(p);
             return GetAllProperties();
         }
         

@@ -25,7 +25,8 @@ namespace Api.Controllers
         [Route("CreatePaper")]
         public ActionResult<Paper> CreatePaper([FromBody][Required] Paper p)
         {
-            return repo.CreatePaper(p);
+            
+            return Ok(repo.CreatePaper(p));
         }
 
         [HttpPut]

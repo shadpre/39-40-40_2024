@@ -76,7 +76,7 @@ namespace DataAccessLayer
         public void UpdateProperty(Property p)
         {
             using (var context = new MyDbContext())
-            {
+            { 
                 context.Properties.Update(p);
                 context.SaveChanges();
             }
