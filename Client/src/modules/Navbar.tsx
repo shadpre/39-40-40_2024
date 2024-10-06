@@ -59,7 +59,7 @@ function Links() {
         <Link to="/create-product">Opret Produkt</Link>
       </li>
       <li>
-        <a>Services</a>
+        <Link to="/properties"> Properties</Link>
       </li>
       <li>
         <a>Contact</a>

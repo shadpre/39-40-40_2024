@@ -19,7 +19,9 @@ namespace DataAccessLayer.Models
         /// The ID must be a non-negative integer.
         /// </remarks>
         [Required(ErrorMessage = "Id er påkrævet")]
-        [Range(0, int.MaxValue, ErrorMessage = "Id skal være større eller lig med 0")]
+        [Range(0,
+            int.MaxValue,
+            ErrorMessage = "Id skal være større eller lig med 0")]
         public int Id { get; set; }
 
         /// <summary>
@@ -29,8 +31,10 @@ namespace DataAccessLayer.Models
         /// The name must be between 3 and 100 characters long and contain at least one space.
         /// </remarks>
         [Required(ErrorMessage = "Navn er påkrævet")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Navn skal være mindst 3 tegn langt.")]
-        [RegularExpression(@"^.*\s+.*$", ErrorMessage = "Navn skal indeholde mindst ét mellemrum.")]
+        [StringLength(100, MinimumLength = 3,
+            ErrorMessage = "Navn skal være mindst 3 tegn langt.")]
+        [RegularExpression(@"^.*\s+.*$",
+            ErrorMessage = "Navn skal indeholde mindst ét mellemrum.")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
@@ -41,7 +45,9 @@ namespace DataAccessLayer.Models
         /// </remarks>
         [Required(ErrorMessage = "Email er påkrævet")]
         [EmailAddress(ErrorMessage = "Ugyldig emailadresse")]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Email skal være mellem 5 og 100 tegn lang.")]
+        [StringLength(100,
+            MinimumLength = 5,
+            ErrorMessage = "Email skal være mellem 5 og 100 tegn lang.")]
         public string Email { get; set; } = string.Empty;
 
         /// <summary>
@@ -51,8 +57,10 @@ namespace DataAccessLayer.Models
         /// The address must be between 3 and 100 characters long and contain at least one space.
         /// </remarks>
         [Required(ErrorMessage = "Adresse er påkrævet")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Adresse skal være mindst 3 tegn lang.")]
-        [RegularExpression(@"^.*\s+.*$", ErrorMessage = "Adresse skal indeholde mindst ét mellemrum.")]
+        [StringLength(100, MinimumLength = 3,
+            ErrorMessage = "Adresse skal være mindst 3 tegn lang.")]
+        [RegularExpression(@"^.*\s+.*$",
+            ErrorMessage = "Adresse skal indeholde mindst ét mellemrum.")]
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
@@ -61,7 +69,8 @@ namespace DataAccessLayer.Models
         /// <remarks>
         /// The phone number must be a maximum of 25 characters long.
         /// </remarks>
-        [StringLength(25, ErrorMessage = "Telefonnummer må maksimalt være 25 tegn langt.")]
+        [StringLength(25,
+            ErrorMessage = "Telefonnummer må maksimalt være 25 tegn langt.")]
         public string Phone { get; set; } = string.Empty;
     }
 }

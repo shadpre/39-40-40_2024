@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import { CurrentCustomerAtom } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../MyAPI";
+import OK_ResetBtn from "../formElements/OK_ResetBtn";
 
 export default function CreateCustomerForm(): JSX.Element {
   const [name, setName] = useState("");
@@ -115,14 +116,7 @@ export default function CreateCustomerForm(): JSX.Element {
           <p className="text-red-500 text-sm mt-1">{emailError}</p>
         )}
       </div>
-      <div className="form-control flex space-x-4">
-        <button type="submit" className="btn btn-primary m-2">
-          Opret
-        </button>
-        <button type="reset" className="btn btn-secondary m-2">
-          Reset
-        </button>
-      </div>
+      <OK_ResetBtn />
     </form>
   );
 }

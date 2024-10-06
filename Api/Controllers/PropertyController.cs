@@ -1,6 +1,7 @@
 ﻿using BusinessLogic;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
@@ -9,25 +10,40 @@ namespace Api.Controllers
         [HttpGet]
         [Route("GetAllProperties")]
         public ActionResult<List<Property>> GetAllProperties()
-        {
-            
+        {            
             return repo.GetAllProperties();
         }
 
         [HttpPost]
         [Route("CreateProperty")]
-        public ActionResult<Property> CreateProperty(Property property)
+        public ActionResult<List<Property>> CreateProperty(
+            [FromBody][Required] Property p)
         {
-            throw new NotImplementedException();
-            //return repo.CreateProperty(property);
+            repo.CreateProperty(p);
+            return GetAllProperties();
         }
+        [HttpPut("UpdateProperty/{Id}")]
+        public ActionResult<List<Property>> UpdateProperty([FromRoute] int Id,
+            [FromBody] Property p)
+        {
+
+            return GetAllProperties();
+        }
+        
 
         [HttpDelete]
-        [Route("Delete/{id}")]
-        public ActionResult<Property> DeleteProperty([FromRoute] int id)
+        [Route("Delete/{Id}")]
+        public ActionResult<List<Property>> DeleteProperty(
+            [FromRoute] int Id,
+            [FromBody][Required] Property p)
         {
-            throw new NotImplementedException();
-            //return repo.DeleteProperty(id);
+            if(Id != p.Id)
+            {
+                return BadRequest("Ids must match");
+            }
+            //Must check if there is any paper property associated with this property
+            repo.DeleteProperty(p);
+            return GetAllProperties();
         }
 
     }

@@ -24,7 +24,8 @@ export interface Customer {
   name: string;
   /**
    * @format email
-   * @minLength 1
+   * @minLength 5
+   * @maxLength 100
    */
   email: string;
   /**
@@ -33,7 +34,36 @@ export interface Customer {
    * @pattern ^.*\s+.*$
    */
   address: string;
+  /**
+   * @minLength 0
+   * @maxLength 25
+   */
   phone?: string | null;
+}
+
+export interface DateOnly {
+  /** @format int32 */
+  year?: number;
+  /** @format int32 */
+  month?: number;
+  /** @format int32 */
+  day?: number;
+  dayOfWeek?: DayOfWeek;
+  /** @format int32 */
+  dayOfYear?: number;
+  /** @format int32 */
+  dayNumber?: number;
+}
+
+/** @format int32 */
+export enum DayOfWeek {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+  Value5 = 5,
+  Value6 = 6,
 }
 
 export interface Order {
@@ -45,28 +75,41 @@ export interface Order {
   id: number;
   /** @format date-time */
   orderDate?: string | null;
-  /** @format date-time */
-  deliveryDate?: string | null;
-  status?: string | null;
+  deliveryDate?: DateOnly;
+  status: OrderStatus;
   /** @format double */
   totalAmount?: number;
   /** @format int32 */
-  customerId?: number;
+  customerId: number;
   customer?: Customer;
-  orderEntries?: OrderEntry[] | null;
+  orderEntries: OrderEntry[];
 }
 
 export interface OrderEntry {
   /** @format int32 */
   id?: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 2147483647
+   */
+  quantity: number;
   /** @format int32 */
-  quantity?: number;
-  /** @format int32 */
-  productId?: number;
+  productId: number;
   product?: Paper;
   /** @format int32 */
-  orderId?: number;
+  orderId: number;
   order?: Order;
+}
+
+/** @format int32 */
+export enum OrderStatus {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+  Value5 = 5,
 }
 
 export interface Paper {
@@ -78,6 +121,7 @@ export interface Paper {
   stock?: number;
   /** @format double */
   price?: number;
+  description?: string | null;
   paperProperties?: PaperProperty[] | null;
   orderEntries?: OrderEntry[] | null;
 }
@@ -349,56 +393,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags Login
+     * @name LoginCreate
+     * @request POST:/api/Login
+     */
+    loginCreate: (data: string, params: RequestParams = {}) =>
+      this.request<Customer, any>({
+        path: `/api/Login`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Order
      * @name OrderCreateOrderCreate
      * @request POST:/api/Order/CreateOrder
      */
-    orderCreateOrderCreate: (
-      query: {
-        /**
-         * @format int32
-         * @min 0
-         * @max 2147483647
-         */
-        Id: number;
-        /** @format date-time */
-        OrderDate?: string;
-        /** @format date-time */
-        DeliveryDate?: string;
-        Status?: string;
-        /** @format double */
-        TotalAmount?: number;
-        /** @format int32 */
-        CustomerId?: number;
-        /**
-         * @format int32
-         * @min 0
-         * @max 2147483647
-         */
-        customerId: number;
-        /**
-         * @minLength 3
-         * @maxLength 100
-         * @pattern ^.*\s+.*$
-         */
-        customerName: string;
-        /** @format email */
-        customerEmail: string;
-        /**
-         * @minLength 3
-         * @maxLength 100
-         * @pattern ^.*\s+.*$
-         */
-        customerAddress: string;
-        customerPhone?: string;
-        OrderEntries?: OrderEntry[];
-      },
-      params: RequestParams = {},
-    ) =>
+    orderCreateOrderCreate: (data: Order, params: RequestParams = {}) =>
       this.request<Order, any>({
         path: `/api/Order/CreateOrder`,
         method: "POST",
-        query: query,
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -410,10 +431,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name OrderGetOrdersDetail
      * @request GET:/api/Order/GetOrders/{CustomerId}
      */
-    orderGetOrdersDetail: (customerId: number, params: RequestParams = {}) =>
+    orderGetOrdersDetail: (customerId: number, data: Customer, params: RequestParams = {}) =>
       this.request<Order[], any>({
         path: `/api/Order/GetOrders/${customerId}`,
         method: "GET",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -440,53 +463,54 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name OrderUpdateOrderUpdate
      * @request PUT:/api/Order/UpdateOrder/{OrderId}
      */
-    orderUpdateOrderUpdate: (
-      orderId: number,
-      query: {
-        /**
-         * @format int32
-         * @min 0
-         * @max 2147483647
-         */
-        Id: number;
-        /** @format date-time */
-        OrderDate?: string;
-        /** @format date-time */
-        DeliveryDate?: string;
-        Status?: string;
-        /** @format double */
-        TotalAmount?: number;
-        /** @format int32 */
-        CustomerId?: number;
-        /**
-         * @format int32
-         * @min 0
-         * @max 2147483647
-         */
-        customerId: number;
-        /**
-         * @minLength 3
-         * @maxLength 100
-         * @pattern ^.*\s+.*$
-         */
-        customerName: string;
-        /** @format email */
-        customerEmail: string;
-        /**
-         * @minLength 3
-         * @maxLength 100
-         * @pattern ^.*\s+.*$
-         */
-        customerAddress: string;
-        customerPhone?: string;
-        OrderEntries?: OrderEntry[];
-      },
-      params: RequestParams = {},
-    ) =>
+    orderUpdateOrderUpdate: (orderId: number, data: Order, params: RequestParams = {}) =>
       this.request<Order, any>({
         path: `/api/Order/UpdateOrder/${orderId}`,
         method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Order
+     * @name OrderUpdateOrderStatusUpdate
+     * @request PUT:/api/Order/UpdateOrderStatus/{OrderId}
+     */
+    orderUpdateOrderStatusUpdate: (orderId: number, data: string, params: RequestParams = {}) =>
+      this.request<Order, any>({
+        path: `/api/Order/UpdateOrderStatus/${orderId}`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Order
+     * @name OrderUpdateOrderDeliveryDateUpdate
+     * @request PUT:/api/Order/UpdateOrderDeliveryDate/{OrderId}
+     */
+    orderUpdateOrderDeliveryDateUpdate: (
+      orderId: number,
+      query: {
+        deliveryDate: DateOnly;
+      },
+      data: Order,
+      params: RequestParams = {},
+    ) =>
+      this.request<Order, any>({
+        path: `/api/Order/UpdateOrderDeliveryDate/${orderId}`,
+        method: "PUT",
         query: query,
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -501,6 +525,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     paperGetPapersList: (params: RequestParams = {}) =>
       this.request<Paper[], any>({
         path: `/api/Paper/GetPapers`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperDetail
+     * @request GET:/api/Paper/{id}
+     */
+    paperDetail: (id: number, params: RequestParams = {}) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/${id}`,
         method: "GET",
         format: "json",
         ...params,
@@ -528,25 +567,129 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Paper
      * @name PaperUpdatePaperUpdate
-     * @request PUT:/api/Paper/UpdatePaper
+     * @request PUT:/api/Paper/UpdatePaper/{Id}
      */
-    paperUpdatePaperUpdate: (
-      query?: {
-        /** @format int32 */
-        Id?: number;
-        Name?: string;
-        Discontinued?: boolean;
-        /** @format int32 */
-        Stock?: number;
+    paperUpdatePaperUpdate: (id: number, data: Paper, params: RequestParams = {}) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/UpdatePaper/${id}`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperDeletePaperDelete
+     * @request DELETE:/api/Paper/DeletePaper/{PaperId}
+     */
+    paperDeletePaperDelete: (paperId: number, data: Paper, params: RequestParams = {}) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/DeletePaper/${paperId}`,
+        method: "DELETE",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperDiscontinuePaperUpdate
+     * @request PUT:/api/Paper/DiscontinuePaper/{PaperId}
+     */
+    paperDiscontinuePaperUpdate: (
+      paperId: number,
+      query: {
+        IsDiscontinued: boolean;
+      },
+      data: Paper,
+      params: RequestParams = {},
+    ) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/DiscontinuePaper/${paperId}`,
+        method: "PUT",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperUpdatePaperPriceUpdate
+     * @request PUT:/api/Paper/UpdatePaperPrice/{PaperId}
+     */
+    paperUpdatePaperPriceUpdate: (
+      paperId: number,
+      query: {
         /** @format double */
-        Price?: number;
-        PaperProperties?: PaperProperty[];
-        OrderEntries?: OrderEntry[];
+        Price: number;
+      },
+      data: Paper,
+      params: RequestParams = {},
+    ) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/UpdatePaperPrice/${paperId}`,
+        method: "PUT",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperUpdatePaperStockUpdate
+     * @request PUT:/api/Paper/UpdatePaperStock/{PaperId}
+     */
+    paperUpdatePaperStockUpdate: (
+      paperId: number,
+      query: {
+        /** @format int32 */
+        AddToStock: number;
+      },
+      data: Paper,
+      params: RequestParams = {},
+    ) =>
+      this.request<Paper, any>({
+        path: `/api/Paper/UpdatePaperStock/${paperId}`,
+        method: "PUT",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Paper
+     * @name PaperChangePaperPropUpdate
+     * @request PUT:/api/Paper/ChangePaperProp/{PaperId}
+     */
+    paperChangePaperPropUpdate: (
+      paperId: number,
+      query: {
+        /** @format int32 */
+        PaperProperty: number;
       },
       params: RequestParams = {},
     ) =>
       this.request<Paper, any>({
-        path: `/api/Paper/UpdatePaper`,
+        path: `/api/Paper/ChangePaperProp/${paperId}`,
         method: "PUT",
         query: query,
         format: "json",
@@ -575,19 +718,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name PropertyCreatePropertyCreate
      * @request POST:/api/Property/CreateProperty
      */
-    propertyCreatePropertyCreate: (
-      query?: {
-        /** @format int32 */
-        Id?: number;
-        PropertyName?: string;
-        PaperProperties?: PaperProperty[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<Property, any>({
+    propertyCreatePropertyCreate: (data: Property, params: RequestParams = {}) =>
+      this.request<Property[], any>({
         path: `/api/Property/CreateProperty`,
         method: "POST",
-        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Property
+     * @name PropertyUpdatePropertyUpdate
+     * @request PUT:/api/Property/UpdateProperty/{Id}
+     */
+    propertyUpdatePropertyUpdate: (id: number, data: Property, params: RequestParams = {}) =>
+      this.request<Property[], any>({
+        path: `/api/Property/UpdateProperty/${id}`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -597,12 +750,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Property
      * @name PropertyDeleteDelete
-     * @request DELETE:/api/Property/Delete/{id}
+     * @request DELETE:/api/Property/Delete/{Id}
      */
-    propertyDeleteDelete: (id: number, params: RequestParams = {}) =>
-      this.request<Property, any>({
+    propertyDeleteDelete: (id: number, data: Property, params: RequestParams = {}) =>
+      this.request<Property[], any>({
         path: `/api/Property/Delete/${id}`,
         method: "DELETE",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

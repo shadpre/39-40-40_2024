@@ -9,5 +9,10 @@ namespace BusinessLogic
         Customer CreateCustomer(Customer c);
         Property CreateProperty(Property p);
         List<Property> GetAllProperties();
+        Paper CreatePaper(Paper p);
+        List<Paper> GetAllPapers();
+        Paper GetPaperById(int i);
+        void DeleteProperty(Property p);
+        void UpdateProperty(Property p);
     }
 }

@@ -60,18 +60,34 @@ namespace DataAccessLayer
         #region Properties
         public Property CreateProperty(Property pr)
         {
-            using (var context = new MyDbContext())
-            {
-                context.Properties.Add(pr);
-                context.SaveChanges();
-                return pr;
-            }
+            using var context = new MyDbContext();
+
+            context.Properties.Add(pr);
+            context.SaveChanges();
+            return pr;
+
         }
         public List<Property> GetAllProperties()
         {
+            using var context = new MyDbContext();
+            return context.Properties.ToList();
+        }
+
+        public void UpdateProperty(Property p)
+        {
             using (var context = new MyDbContext())
             {
-                return context.Properties.ToList();
+                context.Properties.Update(p);
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteProperty(Property p)
+        {
+            using(var context = new MyDbContext())
+            {                
+                context.Properties.Remove(p);
+                context.SaveChanges();
             }
         }
 
@@ -81,7 +97,7 @@ namespace DataAccessLayer
 
             using (var context = new MyDbContext())
             {
-               var paperProps = new List<PaperProperty>();
+                var paperProps = new List<PaperProperty>();
                 foreach (var prID in prIDs)
                 {
                     paperProps.Add(new PaperProperty { PaperId = paID, PropertyId = prID });
@@ -90,6 +106,33 @@ namespace DataAccessLayer
                 context.SaveChanges();
             }
         }
+        #endregion
+
+        #region Paper
+        public Paper CreatePaper(Paper p)
+        {
+            using (var context = new MyDbContext()) { 
+                context.Papers.Add(p);
+                context.SaveChanges();
+                return p; }
+        }
+
+        public List<Paper> GetAllPapers()
+        {
+            using (var context = new MyDbContext())
+            {
+                return context.Papers.ToList();
+            }
+        }
+
+        public Paper GetPaperById(int i)
+        {
+            using (var context = new MyDbContext())
+            {
+                return context.Papers.Find(i);
+            }
+        }
+
         #endregion
     }
 }

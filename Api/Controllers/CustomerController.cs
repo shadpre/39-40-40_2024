@@ -1,6 +1,7 @@
 ﻿using BusinessLogic;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api.Controllers
 {
@@ -16,9 +17,9 @@ namespace Api.Controllers
 
         [HttpPost]
         [Route("CreateNewCustomer")]
-        public ActionResult<Customer> CreateNewCustomer([FromBody] Customer c)
+        public ActionResult<Customer> CreateNewCustomer([FromBody][Required] Customer Customer)
         {
-            return repo.CreateCustomer(c);
+            return repo.CreateCustomer(Customer);
         }
     }
 }

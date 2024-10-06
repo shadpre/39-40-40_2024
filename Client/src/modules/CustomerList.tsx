@@ -31,10 +31,6 @@ export default function CustomerList(): JSX.Element {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div>
       <h1>Customer List</h1>

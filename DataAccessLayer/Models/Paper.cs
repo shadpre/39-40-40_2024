@@ -13,6 +13,7 @@ namespace DataAccessLayer.Models
         public bool Discontinued { get; set; }
         public int Stock { get; set; }
         public double Price { get; set; }
+        public string Description { get; set; }
         public ICollection<PaperProperty> PaperProperties { get; set; } = new List<PaperProperty>();
         public ICollection<OrderEntry> OrderEntries { get; set; } = new List<OrderEntry>();
     }

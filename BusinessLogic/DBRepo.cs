@@ -34,5 +34,29 @@ namespace BusinessLogic
         {
             return dB.GetAllProperties();
         }
+
+        public Paper CreatePaper(Paper p)
+        {
+            return dB.CreatePaper(p);
+        }
+
+        public List<Paper> GetAllPapers()
+        {
+            return dB.GetAllPapers();
+        }
+
+        public Paper GetPaperById(int i)
+        {
+            return dB.GetPaperById(i);
+        }
+
+        public void DeleteProperty(Property p)
+        {
+            dB.DeleteProperty(p);
+        }
+        public void UpdateProperty(Property p)
+        {
+            dB.UpdateProperty(p);
+        }
     }
 }
